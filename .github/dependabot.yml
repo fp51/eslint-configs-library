@@ -1,0 +1,49 @@
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+    labels:
+      - "Action: no bump"
+      - "Action: keep-rebased-then-merge"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-jest"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+    labels:
+      - "Action: no bump"
+      - "Action: keep-rebased-then-merge"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-mocha"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+    labels:
+      - "Action: no bump"
+      - "Action: keep-rebased-then-merge"
+
+
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-redux-saga"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+    labels:
+      - "Action: no bump"
+      - "Action: keep-rebased-then-merge"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-storybook"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+    labels:
+      - "Action: no bump"
+      - "Action: keep-rebased-then-merge"
+

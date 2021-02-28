@@ -3,24 +3,24 @@ name: Continuous integration
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     types: [opened, synchronize]
 
 jobs:
   ci:
-    name: 'install, lint'
-    runs-on: ubuntu-18.04
+    name: 'install, build, lint, test'
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2-beta
+    - uses: actions/checkout@v2
 
     - uses: actions/setup-node@v1
       with:
-        node-verion: '12.x'
+        node-version: '14'
 
     - name: Cache npm cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.npm
         key: v1-npm-${{ github.ref }}-${{ hashFiles('**/package-lock.json') }}
@@ -36,7 +36,7 @@ jobs:
 
     - name: List pull packages
       id: packages
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       env:
         PACKAGES_PUSH: ${{ steps.all-packages.outputs.packages }}
       with:
@@ -74,6 +74,15 @@ jobs:
           (cd $PACKAGE; npm ci)
         done
 
+    - name: Build
+      env:
+        PACKAGES: ${{ steps.packages.outputs.packages }}
+      run: |
+        for PACKAGE in ${PACKAGES//,/ }; do
+          echo $PACKAGE
+          (cd $PACKAGE; npm run build)
+        done
+
     - name: Lint
       env:
         PACKAGES: ${{ steps.packages.outputs.packages }}
@@ -81,5 +90,14 @@ jobs:
         for PACKAGE in ${PACKAGES//,/ }; do
           echo $PACKAGE
           (cd $PACKAGE; npm run lint:js)
+        done
+
+    - name: Test
+      env:
+        PACKAGES: ${{ steps.packages.outputs.packages }}
+      run: |
+        for PACKAGE in ${PACKAGES//,/ }; do
+          echo $PACKAGE
+          (cd $PACKAGE; npm test test:js)
         done
 

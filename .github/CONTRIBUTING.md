@@ -1,4 +1,4 @@
-# Contributing to iAdvize Projects
+# Contributing
 
 Please take a moment to review this document in order to make the contribution
 process easy and effective for everyone involved.
@@ -33,7 +33,7 @@ Guidelines for bug reports:
    reported.
 
 2. **Check if the issue has been fixed** &mdash; try to reproduce it using the
-   latest `master` or development branch in the repository.
+   latest `main` or development branch in the repository.
 
 3. **Isolate the problem** &mdash; make sure that the code in the repository is
 _definitely_ responsible for the issue.

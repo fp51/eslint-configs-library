@@ -7,11 +7,11 @@ on:
 jobs:
   assignee:
     name: 'check assignee'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Check if there is at least one assignee
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |

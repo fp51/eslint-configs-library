@@ -2,13 +2,109 @@ name: On merge
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
     types: [closed]
 
 jobs:
+  generate-docs:
+    name: 'generate docs and push'
+    runs-on: ubuntu-latest
+
+    if: contains(join(github.event.pull_request.labels.*.name), 'packages/')
+
+    steps:
+    - name: Extract package label
+      id: name
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const labels = context.payload.pull_request.labels
+            .map(label => label.name);
+
+          const packageLabels = labels.filter(name => name.includes('packages/'));
+
+          console.log(`::debug ::${packageLabels.length} matching labels`);
+
+          if (packageLabels.length > 1) {
+            throw new Error('Pull request should have only one package label');
+          }
+
+          if (packageLabels.length === 1) {
+            console.log(`::set-output name=package::${packageLabels[0]}`)
+            return;
+          }
+
+          throw new Error('Pull request is not labeled with packages, should not be here');
+
+    - uses: actions/checkout@v2
+      with:
+        ref: main
+        token: ${{ secrets.TOKEN_REPO_WRITE }}
+
+    - name: Git config
+      run: |
+        git config user.name "Github actions"
+        git config user.email "github-actions@fp51.dev"
+
+    - name: Fetch or create gh-pages
+      run: |
+        if git fetch origin gh-pages; then
+          git branch --track gh-pages origin/gh-pages
+        else
+          git checkout --orphan gh-pages
+
+          git reset .
+          git commit --allow-empty -m "Init"
+
+          git push origin gh-pages
+
+          git checkout -f main
+        fi
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+
+    - name: Install
+      env:
+        PACKAGE: ${{ steps.name.outputs.package }}
+      run: |
+        cd $PACKAGE
+        npm ci
+
+    - name: Generate new docs
+      env:
+        PACKAGE: ${{ steps.name.outputs.package }}
+      run: |
+        cd $PACKAGE
+        npm run docs
+
+    - name: Push gh-pages
+      env:
+        PACKAGE: ${{ steps.name.outputs.package }}
+      run: |
+        cd $PACKAGE
+
+        NAME=$(cat package.json | jq -r '.name')
+
+        git worktree add gh-pages-content gh-pages
+
+        mkdir -p gh-pages-content/$PACKAGE || echo Dir already exists
+
+        cp -r docs/* gh-pages-content/$PACKAGE
+        cd gh-pages-content/$PACKAGE
+
+        git add .
+        git commit -m "documentation($NAME): generate new documentation"
+        git push origin gh-pages
+
   publish:
     name: 'create version and deploy'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+
+    needs:
+    - generate-docs
 
     if: >
       github.event.pull_request.merged == true
@@ -23,7 +119,7 @@ jobs:
     steps:
     - name: Extract version label
       id: extract-labels
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
@@ -74,19 +170,19 @@ jobs:
 
           console.log(`::set-output name=package::${packageLabels[0].name}`)
 
-    - uses: actions/checkout@v2-beta
+    - uses: actions/checkout@v2
       with:
-        ref: master
-        token: ${{ secrets.GITHUB_TOKEN_REPO_WRITE }}
+        ref: main
+        token: ${{ secrets.TOKEN_REPO_WRITE }}
 
     - name: Git config
       run: |
         git config user.name "Github actions"
-        git config user.email "github-actions@iadvize.com"
+        git config user.email "github-actions@fp51.dev"
 
     - uses: actions/setup-node@v1
       with:
-        node-verion: '12.x'
+        node-version: '14'
 
     - name: Install
       env:
@@ -99,7 +195,7 @@ jobs:
     - name: Bump classic version
       if: steps.extract-labels.outputs.versionBump != 'beta'
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.TOKEN_NPM }}
         BUMP_TYPE: ${{ steps.extract-labels.outputs.versionBump }}
         PACKAGE: ${{ steps.extract-labels.outputs.package }}
       run: |
@@ -116,14 +212,14 @@ jobs:
     - name: Bumb beta version
       if: steps.extract-labels.outputs.versionBump == 'beta'
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.TOKEN_NPM }}
         PACKAGE: ${{ steps.extract-labels.outputs.package }}
       run: |
         cd $PACKAGE
 
         npm --no-git-tag-version version prerelease --preid=beta
 
-    - name: Push on master
+    - name: Push on main
       id: push
       env:
         PACKAGE: ${{ steps.extract-labels.outputs.package }}
@@ -149,7 +245,7 @@ jobs:
 
     - name: Create deployment
       id: deployment
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       env:
         REF: ${{ steps.push.outputs.ref }}
         VERSION: ${{ steps.push.outputs.VERSION }}
@@ -157,7 +253,7 @@ jobs:
         VERSION_BUMP: ${{ steps.extract-labels.outputs.versionBump }}
         DIRECTORY: ${{ steps.extract-labels.outputs.package }}
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN_REPO_WRITE }}
+        github-token: ${{ secrets.TOKEN_REPO_WRITE }}
         previews: 'ant-man-preview,flash-preview'
         script: |
           const ref = process.env.REF;
@@ -205,7 +301,7 @@ jobs:
 
     - name: Create Release
       if: steps.extract-labels.outputs.versionBump != 'beta'
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       env:
         NAME: ${{ steps.push.outputs.NAME }}
         VERSION: ${{ steps.push.outputs.version }}

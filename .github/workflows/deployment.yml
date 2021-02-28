@@ -5,12 +5,12 @@ on: deployment
 jobs:
   npm:
     name: 'Deploy on npm'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Update deployment status
       id: status
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       env:
         DEPLOYMENT_ID: ${{ github.event.deployment.id }}
       with:
@@ -35,19 +35,19 @@ jobs:
           console.log(`::set-output name=directory::${directory}`)
 
     - name: Checkout code
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
       with:
         ref: ${{ github.event.deployment.payload.ref }}
 
     - name: Git config
       run: |
         git config user.name "Github actions"
-        git config user.email "github-actions@iadvize.com"
+        git config user.email "github-actions@fp51.dev"
 
     - uses: actions/setup-node@v1
       with:
         registry-url: https://registry.npmjs.org/
-        node-verion: '12.x'
+        node-version: '14'
 
     - name: Install
       env:
@@ -57,17 +57,23 @@ jobs:
 
         npm ci
 
+    - name: Build
+      env:
+        DIRECTORY: ${{ steps.status.outputs.directory }}
+      run: |
+        cd $DIRECTORY
+
+        npm run build
+
     - name: Publish npm
       id: publish
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.TOKEN_NPM }}
         VERSION: ${{ github.event.deployment.payload.version }}
         TAG: ${{ github.event.deployment.payload.npmTag }}
         DIRECTORY: ${{ steps.status.outputs.directory }}
       run: |
         cd $DIRECTORY
-
-        NAME=$(cat package.json | jq -r '.name')
 
         npm version $VERSION --allow-same-version --no-git-tag-version
         npm publish --access public --tag $TAG
@@ -76,7 +82,7 @@ jobs:
 
     - name: Update deployment status
       if: always()
-      uses: actions/github-script@0.4.0
+      uses: actions/github-script@v2
       env:
         DEPLOYMENT_ID: ${{ github.event.deployment.id }}
         PUBLISH_STATE: ${{ steps.publish.outputs.state }}
