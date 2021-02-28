@@ -82,7 +82,7 @@ jobs:
 
         npm run docs
 
-        if [ -d "docs"];  then
+        if [ -d "docs" ];  then
           echo "::set-output name=hasDoc::true"
         else
           echo "::set-output name=hasDoc::false"
