@@ -1,4 +1,4 @@
-# @iadvize/eslint-config
+# @fp51/eslint-config
 
 Opiniated eslint config based on airbnb config and prettier.
 
@@ -7,7 +7,7 @@ Opiniated eslint config based on airbnb config and prettier.
 Add this dependency to your repository with its peer-dependency:
 
 ```bash
-npm add --save-dev @iadvize-oss/eslint-config eslint
+npm add --save-dev @fp51/eslint-config eslint
 ```
 ## Usage
 
@@ -16,9 +16,9 @@ Create a .eslintrc file in your project root with this content
 ```json
 {
   "extends": [
-    "@iadvize-oss/eslint-config",
+    "@fp51/eslint-config",
     // or
-    "@iadvize-oss/eslint-config/one-config"
+    "@fp51/eslint-config/<special-config>"
   ]
 }
 ```
@@ -32,14 +32,14 @@ The details are here:
 
 | config                                            | javascript | react | typescript | with types |
 |---------------------------------------------------|:----------:|:-----:|:----------:|:----------:|
-| @iadvize-oss/eslint-config/javascript             |     ✔️     |       |            |            |
-| @iadvize-oss/eslint-config/javascript-react       |     ✔️     |  ✔️   |            |            |
-| @iadvize-oss/eslint-config/light-typescript       |     ✔️     |       |     ✔️     |            |
-| @iadvize-oss/eslint-config/light-typescript-react |     ✔️     |  ✔️   |     ✔️     |            |
-| @iadvize-oss/eslint-config/typescript             |     ✔️     |       |     ✔️     |     ✔️     |
-| @iadvize-oss/eslint-config/typescript-react       |     ✔️     |  ✔️   |     ✔️     |     ✔️     |
+| @fp51/eslint-config/javascript             |     ✔️     |       |            |            |
+| @fp51/eslint-config/javascript-react       |     ✔️     |  ✔️   |            |            |
+| @fp51/eslint-config/light-typescript       |     ✔️     |       |     ✔️     |            |
+| @fp51/eslint-config/light-typescript-react |     ✔️     |  ✔️   |     ✔️     |            |
+| @fp51/eslint-config/typescript             |     ✔️     |       |     ✔️     |     ✔️     |
+| @fp51/eslint-config/typescript-react       |     ✔️     |  ✔️   |     ✔️     |     ✔️     |
 
-The `@iadvize-oss/eslint-config` links to `@iadvize-oss/eslint-config/typescript-react`.
+The `@fp51/eslint-config` links to `@fp51/eslint-config/typescript-react`.
 
 Note that all configs can be used on JSON files too.
 
@@ -58,8 +58,8 @@ Some of these rules are
 As this can drastically affect performance for big code base, we provide
 `light-typescript` configs that do not use type-aware rules.
 
-If you decide to give `@iadvize-oss/eslint-config/typescript` or
-`@iadvize-oss/eslint-config/typescript-react` a try, you will need a
+If you decide to give `@fp51/eslint-config/typescript` or
+`@fp51/eslint-config/typescript-react` a try, you will need a
 `tsconfig.json` file at the root of your project for type-aware rules to work.
 
 Because we also lint JSON files, you need to include them like so:
@@ -104,7 +104,7 @@ The lib also provide a workaround for https://github.com/eslint/eslint/issues/34
 When needed, start by requiring the patch in your config entry point.
 
 ```js
-require('@iadvize-oss/eslint-config/patch');
+require('@fp51/eslint-config/patch');
 
 module.exports = {
   extends: [
