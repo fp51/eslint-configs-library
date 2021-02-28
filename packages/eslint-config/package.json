@@ -38,6 +38,7 @@
     "typescript": "^4.2.2"
   },
   "scripts": {
+    "docs": "mkdir docs && echo no docs",
     "build": "echo nothing to do",
     "test:js": "echo nothing to do",
     "lint:js": "eslint . --ext .js"
