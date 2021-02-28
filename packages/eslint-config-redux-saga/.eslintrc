@@ -1,3 +1,3 @@
 {
-  extends: '@iadvize-oss/eslint-config/javascript',
+  extends: '@fp51/eslint-config/javascript',
 }
