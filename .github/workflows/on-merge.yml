@@ -74,13 +74,22 @@ jobs:
         npm ci
 
     - name: Generate new docs
+      id: generation
       env:
         PACKAGE: ${{ steps.name.outputs.package }}
       run: |
         cd $PACKAGE
+
         npm run docs
 
+        if [ -d "docs"];  then
+          echo "::set-output name=hasDoc::true"
+        else
+          echo "::set-output name=hasDoc::false"
+        fi
+
     - name: Push gh-pages
+      if: steps.generation.outputs.hasDoc == 'true'
       env:
         PACKAGE: ${{ steps.name.outputs.package }}
       run: |
