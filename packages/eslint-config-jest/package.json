@@ -25,7 +25,7 @@
     "eslint-plugin-jest": "^24.1.5"
   },
   "scripts": {
-    "docs": "mkdir docs && touch docs/empty && echo no docs",
+    "docs": "echo no docs",
     "build": "echo nothing to do",
     "test:js": "echo nothing to do",
     "lint:js": "eslint *.js"
