@@ -92,8 +92,6 @@ jobs:
 
         mkdir -p gh-pages-content/$PACKAGE || echo Dir already exists
 
-        ls -all docs
-
         cp -r docs/* gh-pages-content/$PACKAGE
         cd gh-pages-content/$PACKAGE
 
