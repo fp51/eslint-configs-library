@@ -34,6 +34,8 @@ module.exports = {
 
     'no-useless-constructor': 'error',
 
+    'no-constant-condition': 'error',
+
     'eslint-comments/disable-enable-pair': ['error', { allowWholeFile: true }],
     'eslint-comments/no-aggregating-enable': 'error',
     'eslint-comments/no-duplicate-disable': 'error',

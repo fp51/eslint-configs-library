@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+-   `no-constant-condition` should be an error
+
 ## [1.0.1]
 
 -   Fix deprecated usages of `prettier/`
