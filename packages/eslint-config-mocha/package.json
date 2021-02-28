@@ -1,27 +1,30 @@
 {
-  "name": "@iadvize-oss/eslint-config-mocha",
-  "version": "1.2.1",
-  "description": "iAdvize javascript eslint rules for mocha files",
+  "name": "@fp51/eslint-config-mocha",
+  "version": "0.0.0",
+  "description": "fp51 javascript eslint rules for mocha files",
   "main": "index.js",
-  "author": "iAdvize developers",
+  "author": "fp51 developers",
   "keywords": [
-    "iAdvize",
+    "fp51",
     "eslint",
     "mocha"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iadvize/eslint-configs-library"
+    "url": "https://github.com/fp51/eslint-configs-library/"
   },
   "devDependencies": {
-    "@iadvize-oss/eslint-config": "^2.2.0",
-    "eslint": "^7.20.0"
+    "@fp51/eslint-config": "^1.0.0",
+    "eslint": "^7.21.0"
   },
   "peerDependencies": {
-    "eslint": "^6.8.0 || ^7.0.0"
+    "eslint": "^7.0.0"
   },
   "scripts": {
+    "docs": "mkdir docs && touch docs/empty && echo no docs",
+    "build": "echo nothing to do",
+    "test:js": "echo nothing to do",
     "lint:js": "eslint *.js"
   }
 }

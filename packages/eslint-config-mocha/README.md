@@ -1,11 +1,11 @@
-# @iadvize-oss/eslint-config-mocha
+# @fp51/eslint-config-mocha
 
 ## Install
 
 Add this dependency to your repository:
 
 ```bash
-npm add --save-dev @iadvize/eslint-config-mocha eslint
+npm add --save-dev @fp51/eslint-config-mocha eslint
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm add --save-dev @iadvize/eslint-config-mocha eslint
 ```json
 {
   "extends": [
-    "@iadvize-oss/eslint-config-mocha"
+    "@fp51/eslint-config-mocha"
   ]
 }
 ```
