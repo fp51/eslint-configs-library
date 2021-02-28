@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['airbnb/hooks', 'prettier/react'],
+  extends: ['airbnb/hooks'],
   rules: {
     'react/no-danger': 'error',
     'react/forbid-prop-types': [
