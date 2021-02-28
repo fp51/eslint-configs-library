@@ -1,11 +1,11 @@
-# @iadvize-oss/eslint-config-storybook
+# @fp51/eslint-config-storybook
 
 ## Install
 
 Add this dependency to your repository:
 
 ```bash
-npm add --save-dev @iadvize-oss/eslint-config-storybook
+npm add --save-dev @fp51/eslint-config-storybook
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm add --save-dev @iadvize-oss/eslint-config-storybook
 ```json
 {
   "extends": [
-    "@iadvize-oss/eslint-config-storybook"
+    "@fp51/eslint-config-storybook"
   ]
 }
 ```
