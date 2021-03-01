@@ -10,7 +10,9 @@ jobs:
     name: 'generate docs and push'
     runs-on: ubuntu-latest
 
-    if: contains(join(github.event.pull_request.labels.*.name), 'packages/')
+    if: >
+      github.event.pull_request.merged == true
+      && contains(join(github.event.pull_request.labels.*.name), 'packages/')
 
     steps:
     - name: Extract package label
