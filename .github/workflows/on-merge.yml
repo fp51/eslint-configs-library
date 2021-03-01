@@ -47,20 +47,7 @@ jobs:
         git config user.name "Github actions"
         git config user.email "github-actions@fp51.dev"
 
-    - name: Fetch or create gh-pages
-      run: |
-        if git fetch origin gh-pages; then
-          git branch --track gh-pages origin/gh-pages
-        else
-          git checkout --orphan gh-pages
-
-          git reset .
-          git commit --allow-empty -m "Init"
-
-          git push origin gh-pages
-
-          git checkout -f main
-        fi
+    - uses: fp51/actions/create-gh-pages-branch@v1
 
     - uses: actions/setup-node@v1
       with:
@@ -75,11 +62,7 @@ jobs:
 
     - name: Generate new docs
       id: generation
-      env:
-        PACKAGE: ${{ steps.name.outputs.package }}
       run: |
-        cd $PACKAGE
-
         npm run docs
 
         if [ -d "docs" ];  then
